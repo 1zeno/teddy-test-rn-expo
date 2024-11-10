@@ -8,7 +8,7 @@
     "scheme": "teddy-test-rn-expo",
     "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./assets/images/splash.png",
+      "image": "./assets/images/logo-splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
