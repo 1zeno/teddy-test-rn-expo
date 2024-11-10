@@ -20,11 +20,6 @@ export default function BaseLayout(props: IProps) {
 }
 
 const styles = StyleSheet.create({
-    header: {
-        width: "100%",
-        alignItems: "flex-end",
-        paddingVertical: 10,
-    },
     container: {
         flex: 1,
         width: "100%",

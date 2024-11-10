@@ -1,108 +1,267 @@
 import {
 	StyleSheet, Text, TouchableOpacity,
 	View, StatusBar, TextInput,
+	FlatList, Alert,
+	ActivityIndicator,
+	KeyboardAvoidingView,
+	Platform,
+	Dimensions,
 } from "react-native";
 import CardHome from "@/components/CardUsers";
-import { useState, useRef, useCallback } from "react";
-import {Picker} from "@react-native-picker/picker";
+import { useState, useRef, useCallback, useEffect } from "react";
+import { Picker } from "@react-native-picker/picker";
 import Pagination from "@/components/Pagination";
 import {
-    BottomSheetModal,
-    BottomSheetView,
+	BottomSheetModal,
+	BottomSheetView,
 } from "@gorhom/bottom-sheet";
+import { CREATE_USER, DELETE_USER, GET_USERS, IUser } from "@/api/users";
+import useInput from "@/hooks/useInput";
+import "react-native-gesture-handler";
+import { removeMaskPrice } from "@/utils";
 
+interface IGetUsers {
+	clients: IUser[];
+	currentPage: number,
+	totalPages: number,
+}
+
+const { height: screenHeight } = Dimensions.get("window");
 export default function UsersScreen() {
-	const [selectedValue, setSelectedValue] = useState("java");
 	const [currentPage, setCurrentPage] = useState(1);
 	const [totalPages, setTotalPages] = useState(12);
 	const [disable, setDisable] = useState(false);
+	const [limit, setLimit] = useState(1);
+	const [data, setData] = useState<IUser[]>([]);
+	const [quantity, setQuantity] = useState(0);
+	const [listLoading, setListLoading] = useState(true);
+	const [loadingDelete, setLoadingDelete] = useState(false);
+	const name = useInput();
+	const salary = useInput("price");
+	const companyValuation = useInput("price");
 
 	const handlePage = useCallback((page: number) => {
-		setCurrentPage(page);
-	},[])
+		onFilter(page, limit)
+	}, [limit])
 	const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
-    const handlePresentModalPress = useCallback(() => {
-		StatusBar.setHidden(true, 'fade');
-        bottomSheetModalRef.current?.present();
-    }, []);
-    const closeBottomSheet = useCallback(() => {
+	const handlePresentModalPress = useCallback(() => {
+		StatusBar.setHidden(true, "fade");
+		bottomSheetModalRef.current?.present();
+	}, []);
+	const closeBottomSheet = useCallback(() => {
 		bottomSheetModalRef.current?.close();
-    }, []);
+	}, []);
+
+	const getUsers = async () => {
+		setListLoading(true);
+		try {
+			const { url, options } = GET_USERS(1, 1);
+			const response = await fetch(url, options);
+			const json: IGetUsers = await response.json();
+			setData(json.clients);
+			setCurrentPage(json.currentPage);
+			setTotalPages(json.totalPages);
+			setQuantity(json.totalPages);
+		} catch (error) {
+			console.error(error);
+		} finally {
+			setListLoading(false);
+		}
+	}
+
+	const onFilter = async (page: number, limit: number) => {
+		setListLoading(true);
+		try {
+			const { url, options } = GET_USERS(page, limit);
+			const response = await fetch(url, options);
+			const json: IGetUsers = await response.json();
+			setData(json.clients);
+			setCurrentPage(json.currentPage);
+			setTotalPages(json.totalPages);
+		} catch (error) {
+			console.error(error);
+		} finally {
+			setListLoading(false);
+		}
+	}
+
+	const onLimitChange = (itemValue: number, itemIndex: number) => {
+		setLimit(itemValue);
+		onFilter(1, itemValue);
+	}
+
+	const onDeleteAlert = (name: string, id: number) => {
+		const title = "Excluir cliente:"
+		const message = `Tem certeza que deseja excluir o cliente ${name}?`;
+		Alert.alert(title, message, [
+			{
+				text: "Cancelar",
+				style: "cancel",
+			},
+			{
+				text: "Exluir cliente",
+				onPress: () => onDelete(id),
+				style: "destructive",
+			},
+		])
+	};
+	
+	const createUser = useCallback(async ()=> {
+		setDisable(true);
+		try {
+			const body: Omit<IUser, "id"> = {
+				name: name.value,
+				salary: Number(removeMaskPrice(salary.value)),
+				companyValuation: Number(removeMaskPrice(companyValuation.value)),
+			}
+			const { url, options } = CREATE_USER(body);
+			await fetch(url, options);
+			await onFilter(1, limit);
+			closeBottomSheet();
+		} catch (error) {
+			console.error(error);
+		} finally {
+			setDisable(false);
+		}
+	},[name.value, salary.value, companyValuation.value, limit])
+	const onDelete = useCallback(async (id: number)=> {
+		setLoadingDelete(true);
+		try {
+			const { url, options } = DELETE_USER(id);
+			await fetch(url, options);
+			await onFilter(1, limit);
+		} catch (error) {
+			console.error(error);
+		} finally {
+			setLoadingDelete(false);
+		}
+	},[name.value, salary.value, companyValuation.value, limit])
+
+	useEffect(() => {
+		getUsers();
+	}, [])
+
+	if(loadingDelete){
+		return(
+			<ActivityIndicator style={{ flex: 1 }} size="large" color="#EC6724" />
+		)
+	}
 
 	return (
 		<View style={styles.container}>
 			<View style={styles.infoContainer}>
-				<Text style={{...styles.text, ...styles.strongText}}>2</Text>
+				<Text style={{ ...styles.text, ...styles.strongText }}>{quantity}</Text>
 				<Text style={styles.text}> clientes encontrados:</Text>
 			</View>
 			<View style={styles.infoContainer}>
 				<Text style={styles.text}>Clientes por página:</Text>
 				<Picker
-					selectedValue={selectedValue}
-					onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
+					selectedValue={limit}
+					onValueChange={onLimitChange}
 					style={{ height: 50, width: 100 }}
 				>
+					<Picker.Item label="1" value="1" />
 					<Picker.Item label="5" value="5" />
 					<Picker.Item label="10" value="10" />
 					<Picker.Item label="15" value="15" />
 					<Picker.Item label="20" value="20" />
 				</Picker>
 			</View>
-			<CardHome />
-			<CardHome />
+			{!listLoading && data.length > 0 ? (
+				<FlatList
+					style={{
+						gap: 20,
+					}}
+					data={data}
+					renderItem={({ item }) => (
+						<CardHome
+							key={item.id}
+							user={item}
+							onDelete={onDeleteAlert}
+						/>
+					)}
+				/>
+			) : (
+				<ActivityIndicator style={{ flex: 1 }} size="large" color="#EC6724" />
+			)}
+			{!listLoading && data.length === 0 && (
+				<View style={styles.emptyContainer}>
+					<Text style={styles.emptyText}>Não há cliente cadastrado.</Text>
+				</View>
+			)}
 			<TouchableOpacity style={styles.button} onPress={handlePresentModalPress}>
 				<Text style={styles.buttonText}>Criar cliente</Text>
 			</TouchableOpacity>
-            <BottomSheetModal
-                ref={bottomSheetModalRef}
-				onDismiss={()=>{
-					StatusBar.setHidden(false, 'fade');
+			<BottomSheetModal
+				ref={bottomSheetModalRef}
+				onDismiss={() => {
+					StatusBar.setHidden(false, "fade");
 				}}
 				handleStyle={{
 					paddingTop: 20,
-						backgroundColor: "#7A7A7A",
+					backgroundColor: "#7A7A7A",
 				}}
 				handleIndicatorStyle={{
-						backgroundColor: "#FFF",
+					backgroundColor: "#FFF",
 				}}
-                containerStyle={{
-                    zIndex: 11,	
-                }}
-            >
-                <BottomSheetView style={styles.contentContainer}>
-					<View style={styles.titleContent}>
-                    	<Text style={styles.createTextTitle}>Criar cliente</Text>
-					</View>
-					<View style={styles.fieldContainer}>
-						<Text style={styles.label}>Nome</Text>
-						<TextInput
-							style={styles.input}
-							placeholder="Digite o seu nome:"
-							placeholderTextColor="#FFFFFF66"
-						/>
-					</View>
-					<View style={styles.fieldContainer}>
-						<Text style={styles.label}>Salário</Text>
-						<TextInput
-							style={styles.input}
-							placeholder="Digite o salário:"
-							placeholderTextColor="#FFFFFF66"
-						/>
-					</View>
-					<View style={styles.fieldContainer}>
-						<Text style={styles.label}>Valor da empresa</Text>
-						<TextInput
-							style={styles.input}
-							placeholder="Digite o valor da empresa:"
-							placeholderTextColor="#FFFFFF66"
-						/>
-					</View>
-					<TouchableOpacity style={disable ? styles.disabledButton : styles.createButton} onPress={closeBottomSheet}>
-						<Text style={disable ? styles.disabledText : styles.createButtonText}>Criar cliente</Text>
-					</TouchableOpacity>
-                </BottomSheetView>
-            </BottomSheetModal>
+				containerStyle={{
+					zIndex: 11,
+				}}
+				snapPoints={["100%"]}
+			>
+				<KeyboardAvoidingView
+				behavior={Platform.OS === "ios" ? "padding" : "height"}
+				style={{
+					flex: 1
+				}}
+				>
+					<BottomSheetView style={styles.contentContainer}>
+						<View style={styles.titleContent}>
+							<Text style={styles.createTextTitle}>Criar cliente</Text>
+						</View>
+						<View style={styles.fieldContainer}>
+							<Text style={styles.label}>Nome</Text>
+							<TextInput
+								style={styles.input}
+								placeholder="Digite o seu nome:"
+								placeholderTextColor="#FFFFFF66"
+								onChangeText={name.onChange}
+								onBlur={name.onBlur}
+								value={name.value}
+							/>
+						</View>
+						<View style={styles.fieldContainer}>
+							<Text style={styles.label}>Salário</Text>
+							<TextInput
+								style={styles.input}
+								placeholder="Digite o salário:"
+								placeholderTextColor="#FFFFFF66"
+								onChangeText={salary.onChange}
+								onBlur={salary.onBlur}
+								value={salary.value}
+							/>
+						</View>
+						<View style={styles.fieldContainer}>
+							<Text style={styles.label}>Valor da empresa</Text>
+							<TextInput
+								style={styles.input}
+								placeholder="Digite o valor da empresa:"
+								placeholderTextColor="#FFFFFF66"
+								onChangeText={companyValuation.onChange}
+								onBlur={companyValuation.onBlur}
+								value={companyValuation.value}
+							/>
+						</View>
+						<TouchableOpacity style={disable ? styles.disabledButton : styles.createButton} onPress={createUser}>
+							<Text style={disable ? styles.disabledText : styles.createButtonText}>Criar cliente</Text>
+						</TouchableOpacity>
+						{disable && (
+							<ActivityIndicator style={{ flex: 1 }} size="large" color="#EC6724" />
+						)}
+					</BottomSheetView>
+				</KeyboardAvoidingView>
+			</BottomSheetModal>
 			<Pagination
 				currentPage={currentPage}
 				total={totalPages}
@@ -130,6 +289,15 @@ const styles = StyleSheet.create({
 	strongText: {
 		fontWeight: "bold",
 	},
+	emptyText: {
+		fontSize: 18,
+		fontWeight: "bold",
+	},
+	emptyContainer: {
+		flex: 1,
+		alignItems: "center",
+		justifyContent: "center",
+	},
 	paginationText: {
 		fontSize: 14,
 	},
@@ -147,12 +315,13 @@ const styles = StyleSheet.create({
 		color: "#EC6724",
 	},
 	contentContainer: {
-        flex: 1,
-        alignItems: "center",
+		flex: 1,
+		alignItems: "center",
 		backgroundColor: "#7A7A7A",
 		gap: 20,
 		padding: 16,
-    },
+		height: screenHeight,
+	},
 	titleContent: {
 		width: "100%",
 		paddingVertical: 16,
@@ -203,5 +372,8 @@ const styles = StyleSheet.create({
 		fontSize: 18,
 		fontWeight: "500",
 		color: "#FFF"
-	}
+	},
+	listContainer: {
+		overflow: "scroll",
+	},
 });

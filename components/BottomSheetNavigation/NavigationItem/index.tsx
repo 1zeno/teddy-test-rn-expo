@@ -38,7 +38,7 @@ export default function NavigationItem(props: IProps) {
             Icon: UsersIcon,
         },
         {
-            name: "Products",
+            name: "Produtos",
             path: "/products",
             Icon: ProductsIcon,
         },

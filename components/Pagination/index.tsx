@@ -94,7 +94,7 @@ export default function Pagination(props: IProps) {
                 </>
             )}
             {!isLastPage && (
-                <TouchableOpacity style={styles.item} onPress={()=>props.handlePage(props.currentPage - 1)}>
+                <TouchableOpacity style={styles.item} onPress={()=>props.handlePage(props.currentPage + 1)}>
                     <Text style={{ ...styles.text, ...styles.strongText }}>{props.total}</Text>
                 </TouchableOpacity>
             )}

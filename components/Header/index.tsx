@@ -20,6 +20,8 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "space-between",
         padding: 20,
+        backgroundColor: "#FFF",
+        zIndex: 2,
     },
     shadowLine: {
         width: '100%',
