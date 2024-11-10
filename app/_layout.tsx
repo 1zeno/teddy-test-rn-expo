@@ -1,11 +1,8 @@
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { Drawer } from 'expo-router/drawer';
-import HomeIcon from "@/assets/icons/home.svg";
-import UsersIcon from "@/assets/icons/users.svg";
-import ProductsIcon from "@/assets/icons/products.svg";
 import { Slot } from "expo-router";
 import BaseLayout from "@/components/BaseLayout";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
+import { AppContextProvider } from "@/context/AppContext";
 
 export default function RootLayout() {
 
@@ -13,9 +10,11 @@ export default function RootLayout() {
 		
 		<GestureHandlerRootView>
 			<BottomSheetModalProvider>
-				<BaseLayout>
-					<Slot />
-				</BaseLayout>
+				<AppContextProvider>
+					<BaseLayout>
+						<Slot />
+					</BaseLayout>
+				</AppContextProvider>
 			</BottomSheetModalProvider>
 		</GestureHandlerRootView>
 	);

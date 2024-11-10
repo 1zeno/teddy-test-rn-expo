@@ -1,12 +1,12 @@
 
 import React, { useCallback, useRef, useState } from "react";
-import { View, StyleSheet, Button, TouchableOpacity } from "react-native";
+import { View, StyleSheet, TouchableOpacity } from "react-native";
 import {
     BottomSheetModal,
     BottomSheetView,
 } from "@gorhom/bottom-sheet";
 import NavigationItem from "./NavigationItem";
-import MenuIcon from '@expo/vector-icons/Feather';
+import MenuIcon from "@expo/vector-icons/Feather";
 
 export default function BottomSheetNavigation() {
 
