@@ -1,11 +1,21 @@
-import { StyleSheet, Text, View } from "react-native";
-import { Link } from "expo-router";
+import { StyleSheet, Text, TextInput, View, TouchableOpacity } from "react-native";
+import { useRouter } from "expo-router";
 
 export default function LoginScreen() {
+
+	const router = useRouter();
+
+	const onSubmit = () => {
+		router.navigate("/home");
+	}
+
 	return (
 		<View style={styles.container}>
-			<Text style={styles.title}>Login</Text>
-			<Link href="/home">Home</Link>
+			<Text style={styles.title}>Olá, seja bem-vindo!</Text>
+			<TextInput style={styles.textInput} placeholder="Digite o seu nome:" />
+			<TouchableOpacity style={styles.button} onPress={onSubmit}>
+				<Text style={styles.buttonText}>Entrar</Text>
+			</TouchableOpacity>
 		</View>
 	);
 }
@@ -15,9 +25,29 @@ const styles = StyleSheet.create({
 		flex: 1,
 		alignItems: "center",
 		justifyContent: "center",
+		padding: 20,
+		gap: 20,
 	},
 	title: {
-		fontSize: 20,
-		fontWeight: "bold",
+		fontSize: 32,
+	},
+	textInput: {
+		padding: 16,
+		borderColor: "#D9D9D9",
+		borderWidth: 1,
+		width: "100%",
+		fontSize: 24,
+		color: "#D9D9D9",
+	},
+	button: {
+		width: "100%",
+		backgroundColor: "#EC6724",
+		alignItems: "center",
+		paddingVertical: 20,
+	},
+	buttonText: {
+		fontSize: 24,
+		fontWeight: "700",
+		color: "#FFFFFF",
 	},
 });
