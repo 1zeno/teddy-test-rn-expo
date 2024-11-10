@@ -30,7 +30,7 @@ export default function NavigationItem(props: IProps) {
             Icon: HomeIcon,
         },
         {
-            name: "Users",
+            name: "Clientes",
             path: "/users",
             Icon: UsersIcon,
         },

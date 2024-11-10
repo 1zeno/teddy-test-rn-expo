@@ -34,10 +34,11 @@ const styles = StyleSheet.create({
 	textInput: {
 		padding: 16,
 		borderColor: "#D9D9D9",
-		borderWidth: 1,
+		borderWidth: 2,
 		width: "100%",
 		fontSize: 24,
 		color: "#D9D9D9",
+		borderRadius: 4,
 	},
 	button: {
 		width: "100%",
@@ -47,7 +48,8 @@ const styles = StyleSheet.create({
 	},
 	buttonText: {
 		fontSize: 24,
-		fontWeight: "700",
+		fontWeight: "bold",
 		color: "#FFFFFF",
+		borderRadius: 4,
 	},
 });
