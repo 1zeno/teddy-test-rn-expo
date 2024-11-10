@@ -1,13 +1,16 @@
 import { StyleSheet, Text, View } from "react-native";
 import { useLocalSearchParams } from "expo-router";
+import BaseLayout from "@/components/BaseLayout";
 
 export default function UserScreen() {
 	const { id } = useLocalSearchParams();
 	console.log("id:", id);
 	return (
-		<View style={styles.container}>
-			<Text style={styles.title}>Users</Text>
-		</View>
+		<BaseLayout>
+			<View style={styles.container}>
+				<Text style={styles.title}>Users</Text>
+			</View>
+		</BaseLayout>
 	);
 }
 

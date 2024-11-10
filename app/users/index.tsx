@@ -1,9 +1,9 @@
 import { Link } from "expo-router";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text } from "react-native";
 
 export default function UsersScreen() {
 	return (
-		<View style={styles.container}>
+		<>
 			<Text style={styles.title}>Users</Text>
 			<Link
 				href={{
@@ -12,7 +12,7 @@ export default function UsersScreen() {
 				}}>
 				View user details
 			</Link>
-		</View>
+		</>
 	);
 }
 
