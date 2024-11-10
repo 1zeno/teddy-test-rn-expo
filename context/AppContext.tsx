@@ -3,6 +3,7 @@ import React from "react";
 type AppContext = {
     user: String | null;
     setUser: React.Dispatch<React.SetStateAction<String | null>>;
+    logout: () => void;
     showOverlay: boolean;
     setShowOverlay: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -24,13 +25,18 @@ export const AppContextProvider = ({
     children: React.ReactNode;
 }) => {
     const [userState, setUser] = React.useState<String | null>(null); 
-    const [showOverlay, setShowOverlay] = React.useState<boolean>(false); 
+    const [showOverlay, setShowOverlay] = React.useState<boolean>(false);
+
+    const logout = () => {
+        setUser(null);
+    }
 
     return (
         <AppContext.Provider
             value={{
                 user: userState,
                 setUser,
+                logout,
                 showOverlay,
                 setShowOverlay,
             }}>

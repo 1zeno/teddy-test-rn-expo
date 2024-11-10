@@ -1,18 +1,28 @@
 import { StyleSheet, Text, TextInput, View, TouchableOpacity } from "react-native";
 import { useRouter } from "expo-router";
+import { useState } from "react";
+import { useAppContext } from "@/context/AppContext";
 
 export default function LoginScreen() {
 
+	const [name, setName] = useState("");
 	const router = useRouter();
+	const appContext = useAppContext();
 
 	const onSubmit = () => {
+		appContext.setUser(name);
 		router.navigate("/home");
 	}
 
 	return (
 		<View style={styles.container}>
 			<Text style={styles.title}>Olá, seja bem-vindo!</Text>
-			<TextInput style={styles.textInput} placeholder="Digite o seu nome:" />
+			<TextInput
+				style={styles.textInput}
+				placeholder="Digite o seu nome:"
+				placeholderTextColor="#D9D9D9"
+				onChangeText={setName}
+			/>
 			<TouchableOpacity style={styles.button} onPress={onSubmit}>
 				<Text style={styles.buttonText}>Entrar</Text>
 			</TouchableOpacity>
@@ -37,7 +47,6 @@ const styles = StyleSheet.create({
 		borderWidth: 2,
 		width: "100%",
 		fontSize: 24,
-		color: "#D9D9D9",
 		borderRadius: 4,
 	},
 	button: {
