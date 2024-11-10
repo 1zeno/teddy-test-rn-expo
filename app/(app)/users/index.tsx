@@ -2,9 +2,17 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import CardHome from "@/components/CardUsers";
 import { useState } from "react";
 import {Picker} from "@react-native-picker/picker";
+import Pagination from "@/components/Pagination";
 
 export default function UsersScreen() {
 	const [selectedValue, setSelectedValue] = useState("java");
+	const [currentPage, setCurrentPage] = useState(1);
+	const [totalPages, setTotalPages] = useState(12);
+
+	const handlePage = (page: number) => {
+		setCurrentPage(page);
+	}
+
 	return (
 		<View style={styles.container}>
 			<View style={styles.infoContainer}>
@@ -29,25 +37,11 @@ export default function UsersScreen() {
 			<TouchableOpacity style={styles.button} onPress={()=>console.log("criar")}>
 				<Text style={styles.buttonText}>Criar cliente</Text>
 			</TouchableOpacity>
-			<View style={styles.paginationContainer}>
-				<TouchableOpacity style={styles.paginationItem}>
-					<Text style={{...styles.paginationText, ...styles.strongText}}>1</Text>
-				</TouchableOpacity>
-				<Text style={{...styles.paginationText, ...styles.strongText}}>...</Text>
-				<TouchableOpacity style={styles.paginationItem}>
-					<Text style={{...styles.paginationText, ...styles.strongText}}>3</Text>
-				</TouchableOpacity>
-				<TouchableOpacity style={styles.paginationSelectedItem}>
-					<Text style={{...styles.paginationSelectedItemText, ...styles.strongText}}>4</Text>
-				</TouchableOpacity>
-				<TouchableOpacity style={styles.paginationItem}>
-					<Text style={{...styles.paginationText, ...styles.strongText}}>5</Text>
-				</TouchableOpacity>
-				<Text style={{...styles.paginationText, ...styles.strongText}}>...</Text>
-				<TouchableOpacity style={styles.paginationItem}>
-					<Text style={{...styles.paginationText, ...styles.strongText}}>12</Text>
-				</TouchableOpacity>
-			</View>
+			<Pagination
+				currentPage={currentPage}
+				total={totalPages}
+				handlePage={handlePage}
+			/>
 		</View>
 	);
 }
