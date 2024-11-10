@@ -1,17 +1,34 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+	StyleSheet, Text, TouchableOpacity,
+	View, StatusBar, TextInput,
+} from "react-native";
 import CardHome from "@/components/CardUsers";
-import { useState } from "react";
+import { useState, useRef, useCallback } from "react";
 import {Picker} from "@react-native-picker/picker";
 import Pagination from "@/components/Pagination";
+import {
+    BottomSheetModal,
+    BottomSheetView,
+} from "@gorhom/bottom-sheet";
 
 export default function UsersScreen() {
 	const [selectedValue, setSelectedValue] = useState("java");
 	const [currentPage, setCurrentPage] = useState(1);
 	const [totalPages, setTotalPages] = useState(12);
+	const [disable, setDisable] = useState(false);
 
-	const handlePage = (page: number) => {
+	const handlePage = useCallback((page: number) => {
 		setCurrentPage(page);
-	}
+	},[])
+	const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+
+    const handlePresentModalPress = useCallback(() => {
+		StatusBar.setHidden(true, 'fade');
+        bottomSheetModalRef.current?.present();
+    }, []);
+    const closeBottomSheet = useCallback(() => {
+		bottomSheetModalRef.current?.close();
+    }, []);
 
 	return (
 		<View style={styles.container}>
@@ -34,9 +51,58 @@ export default function UsersScreen() {
 			</View>
 			<CardHome />
 			<CardHome />
-			<TouchableOpacity style={styles.button} onPress={()=>console.log("criar")}>
+			<TouchableOpacity style={styles.button} onPress={handlePresentModalPress}>
 				<Text style={styles.buttonText}>Criar cliente</Text>
 			</TouchableOpacity>
+            <BottomSheetModal
+                ref={bottomSheetModalRef}
+				onDismiss={()=>{
+					StatusBar.setHidden(false, 'fade');
+				}}
+				handleStyle={{
+					paddingTop: 20,
+						backgroundColor: "#7A7A7A",
+				}}
+				handleIndicatorStyle={{
+						backgroundColor: "#FFF",
+				}}
+                containerStyle={{
+                    zIndex: 11,	
+                }}
+            >
+                <BottomSheetView style={styles.contentContainer}>
+					<View style={styles.titleContent}>
+                    	<Text style={styles.createTextTitle}>Criar cliente</Text>
+					</View>
+					<View style={styles.fieldContainer}>
+						<Text style={styles.label}>Nome</Text>
+						<TextInput
+							style={styles.input}
+							placeholder="Digite o seu nome:"
+							placeholderTextColor="#FFFFFF66"
+						/>
+					</View>
+					<View style={styles.fieldContainer}>
+						<Text style={styles.label}>Salário</Text>
+						<TextInput
+							style={styles.input}
+							placeholder="Digite o salário:"
+							placeholderTextColor="#FFFFFF66"
+						/>
+					</View>
+					<View style={styles.fieldContainer}>
+						<Text style={styles.label}>Valor da empresa</Text>
+						<TextInput
+							style={styles.input}
+							placeholder="Digite o valor da empresa:"
+							placeholderTextColor="#FFFFFF66"
+						/>
+					</View>
+					<TouchableOpacity style={disable ? styles.disabledButton : styles.createButton} onPress={closeBottomSheet}>
+						<Text style={disable ? styles.disabledText : styles.createButtonText}>Criar cliente</Text>
+					</TouchableOpacity>
+                </BottomSheetView>
+            </BottomSheetModal>
 			<Pagination
 				currentPage={currentPage}
 				total={totalPages}
@@ -80,25 +146,62 @@ const styles = StyleSheet.create({
 		fontWeight: "bold",
 		color: "#EC6724",
 	},
-	paginationContainer: {
+	contentContainer: {
+        flex: 1,
+        alignItems: "center",
+		backgroundColor: "#7A7A7A",
+		gap: 20,
+		padding: 16,
+    },
+	titleContent: {
 		width: "100%",
-		flexDirection: "row",
-		justifyContent: "center",
-		alignItems: "center",
-		gap: 10,
+		paddingVertical: 16,
 	},
-	paginationSelectedItem: {
-		paddingVertical: 10,
-		paddingHorizontal: 15,
-		backgroundColor: "#EC6724",
-		borderRadius: 4,
-	},
-	paginationSelectedItemText: {
-		color: "#FFFFFF",
+	createTextTitle: {
+		fontSize: 18,
+		color: "#FFF",
 		fontWeight: "bold",
 	},
-	paginationItem: {
-		paddingVertical: 10,
-		paddingHorizontal: 15,
+	label: {
+		fontSize: 14,
+		color: "#FFF",
+		paddingBottom: 4,
+		fontWeight: "500",
 	},
+	input: {
+		fontSize: 16,
+		color: "#FFF",
+		borderWidth: 2,
+		borderColor: "#FFFFFF66",
+		padding: 12,
+		borderRadius: 12,
+		fontWeight: "500",
+	},
+	fieldContainer: {
+		width: "100%",
+	},
+	disabledButton: {
+		width: "100%",
+		backgroundColor: "#FFFFFF1A",
+		alignItems: "center",
+		padding: 12,
+		borderRadius: 12,
+	},
+	disabledText: {
+		fontSize: 18,
+		fontWeight: "500",
+		color: "#7A7A7A"
+	},
+	createButton: {
+		width: "100%",
+		backgroundColor: "#EB6625",
+		alignItems: "center",
+		padding: 12,
+		borderRadius: 12,
+	},
+	createButtonText: {
+		fontSize: 18,
+		fontWeight: "500",
+		color: "#FFF"
+	}
 });
