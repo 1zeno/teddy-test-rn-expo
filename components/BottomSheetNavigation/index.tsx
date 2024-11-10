@@ -1,26 +1,27 @@
 
-import React, { useCallback, useRef, useState } from "react";
-import { View, StyleSheet, TouchableOpacity } from "react-native";
+import React, { useCallback, useRef } from "react";
+import { StyleSheet } from "react-native";
 import {
     BottomSheetModal,
     BottomSheetView,
 } from "@gorhom/bottom-sheet";
 import NavigationItem from "./NavigationItem";
 import MenuIcon from "@expo/vector-icons/Feather";
+import { useAppContext } from "@/context/AppContext";
 
 export default function BottomSheetNavigation() {
 
-    const [isOpen, setIsOpen] = useState(false);
     const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+    const appContext = useAppContext();
 
     const handlePresentModalPress = useCallback(() => {
         bottomSheetModalRef.current?.present();
     }, []);
     const handleSheetChanges = useCallback((index: number) => {
         if (index === -1) {
-            setIsOpen(false);
+            appContext.setShowOverlay(false);
         } else {
-            setIsOpen(true);
+            appContext.setShowOverlay(true);
         }
     }, []);
     const closeBottomSheet = () => {
@@ -29,11 +30,6 @@ export default function BottomSheetNavigation() {
 
     return (
         <>
-            {isOpen && (
-                <TouchableOpacity style={styles.overlay} onPress={closeBottomSheet} activeOpacity={1}>
-                    <View />
-                </TouchableOpacity>
-            )}
             <MenuIcon
                 name="menu"
                 onPress={handlePresentModalPress}
@@ -61,17 +57,6 @@ const styles = StyleSheet.create({
     contentContainer: {
         flex: 1,
         alignItems: "center",
-    },
-    overlay: {
-        position: "absolute",
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        backgroundColor: "rgba(0, 0, 0, 0.5)",
-        justifyContent: "center",
-        alignItems: "center",
-        zIndex: 10,
     },
     item: {
         alignItems: "center",

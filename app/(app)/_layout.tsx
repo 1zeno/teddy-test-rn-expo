@@ -3,6 +3,7 @@ import { Text } from "react-native";
 import { Redirect, Slot } from "expo-router";
 import BaseLayout from "@/components/BaseLayout";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
+import Overlay from "@/components/Overlay";
 
 export default function AppLayout() {
 	/*
@@ -24,6 +25,7 @@ export default function AppLayout() {
 	return (
 		<GestureHandlerRootView>
 			<BottomSheetModalProvider>
+				<Overlay />
 				<BaseLayout>
 					<Slot />
 				</BaseLayout>
