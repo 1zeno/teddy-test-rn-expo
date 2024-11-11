@@ -6,7 +6,7 @@ import { Link } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
 	ActivityIndicator, FlatList, Pressable,
-	StyleSheet, Text, View, TouchableOpacity,
+	StyleSheet, Text, View,
 } from "react-native";
 
 export default function HomeScreen() {

@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TextInput, View, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, TextInput, View } from "react-native";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { useAppContext } from "@/context/AppContext";
@@ -67,18 +67,6 @@ const styles = StyleSheet.create({
 		borderWidth: 2,
 		width: "100%",
 		fontSize: 24,
-		borderRadius: 4,
-	},
-	button: {
-		width: "100%",
-		backgroundColor: "#EC6724",
-		alignItems: "center",
-		paddingVertical: 20,
-	},
-	buttonText: {
-		fontSize: 24,
-		fontWeight: "bold",
-		color: "#FFFFFF",
 		borderRadius: 4,
 	},
 });

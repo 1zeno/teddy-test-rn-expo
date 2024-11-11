@@ -145,19 +145,6 @@ const styles = StyleSheet.create({
 	paginationText: {
 		fontSize: 14,
 	},
-	button: {
-		width: "100%",
-		borderColor: "#EC6724",
-		borderWidth: 2,
-		alignItems: "center",
-		paddingVertical: 10,
-		borderRadius: 4,
-	},
-	buttonText: {
-		fontSize: 14,
-		fontWeight: "bold",
-		color: "#EC6724",
-	},
 	contentContainer: {
 		flex: 1,
 		alignItems: "center",
@@ -189,30 +176,6 @@ const styles = StyleSheet.create({
 	},
 	fieldContainer: {
 		width: "100%",
-	},
-	disabledButton: {
-		width: "100%",
-		backgroundColor: "#FFFFFF1A",
-		alignItems: "center",
-		padding: 12,
-		borderRadius: 12,
-	},
-	disabledText: {
-		fontSize: 18,
-		fontWeight: "500",
-		color: "#7A7A7A"
-	},
-	createButton: {
-		width: "100%",
-		backgroundColor: "#EB6625",
-		alignItems: "center",
-		padding: 12,
-		borderRadius: 12,
-	},
-	createButtonText: {
-		fontSize: 18,
-		fontWeight: "500",
-		color: "#FFF"
 	},
 	listContainer: {
 		overflow: "scroll",

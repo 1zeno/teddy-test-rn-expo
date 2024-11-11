@@ -109,19 +109,6 @@ const styles = StyleSheet.create({
     text: {
         fontSize: 14,
     },
-    button: {
-        width: "100%",
-        borderColor: "#EC6724",
-        borderWidth: 2,
-        alignItems: "center",
-        paddingVertical: 10,
-        borderRadius: 4,
-    },
-    buttonText: {
-        fontSize: 14,
-        fontWeight: "bold",
-        color: "#EC6724",
-    },
     container: {
         width: "100%",
         flexDirection: "row",

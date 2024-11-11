@@ -1,20 +1,14 @@
 import {
-	StyleSheet, Text, TouchableOpacity,
+	StyleSheet, Text,
 	View, StatusBar, TextInput,
-	FlatList, Alert,
-	ActivityIndicator,
-	KeyboardAvoidingView,
-	Platform,
-	Dimensions,
+	FlatList, Alert, ActivityIndicator,
+	KeyboardAvoidingView, Platform, Dimensions,
 } from "react-native";
 import CardHome from "@/components/CardUsers";
 import { useState, useRef, useCallback, useEffect } from "react";
 import { Picker } from "@react-native-picker/picker";
 import Pagination from "@/components/Pagination";
-import {
-	BottomSheetModal,
-	BottomSheetView,
-} from "@gorhom/bottom-sheet";
+import { BottomSheetModal, BottomSheetView } from "@gorhom/bottom-sheet";
 import { CREATE_USER, DELETE_USER, GET_USERS, IUser } from "@/api/users";
 import useInput from "@/hooks/useInput";
 import "react-native-gesture-handler";
@@ -392,19 +386,6 @@ const styles = StyleSheet.create({
 	paginationText: {
 		fontSize: 14,
 	},
-	button: {
-		width: "100%",
-		borderColor: "#EC6724",
-		borderWidth: 2,
-		alignItems: "center",
-		paddingVertical: 10,
-		borderRadius: 4,
-	},
-	buttonText: {
-		fontSize: 14,
-		fontWeight: "bold",
-		color: "#EC6724",
-	},
 	contentContainer: {
 		flex: 1,
 		alignItems: "center",
@@ -439,30 +420,6 @@ const styles = StyleSheet.create({
 	},
 	fieldContainer: {
 		width: "100%",
-	},
-	disabledButton: {
-		width: "100%",
-		backgroundColor: "#FFFFFF1A",
-		alignItems: "center",
-		padding: 12,
-		borderRadius: 12,
-	},
-	disabledText: {
-		fontSize: 18,
-		fontWeight: "500",
-		color: "#7A7A7A"
-	},
-	createButton: {
-		width: "100%",
-		backgroundColor: "#EB6625",
-		alignItems: "center",
-		padding: 12,
-		borderRadius: 12,
-	},
-	createButtonText: {
-		fontSize: 18,
-		fontWeight: "500",
-		color: "#FFF"
 	},
 	listContainer: {
 		overflow: "scroll",
