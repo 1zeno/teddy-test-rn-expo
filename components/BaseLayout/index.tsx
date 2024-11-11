@@ -1,13 +1,16 @@
 import { StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import BottomSheetNavigation from "../BottomSheetNavigation";
 import Header from "../Header";
+import Snackbar from "../Snackbar";
+import { useAppContext } from "@/context/AppContext";
 
 interface IProps {
     children: React.ReactElement | React.ReactElement[];
 }
 
 export default function BaseLayout(props: IProps) {
+    const appContext = useAppContext();
+    
     return (
         <>
             <SafeAreaView />
@@ -15,6 +18,10 @@ export default function BaseLayout(props: IProps) {
             <View style={styles.container}>
                 {props.children}
             </View>
+            <Snackbar
+                text={appContext.message.text}
+                status={appContext.message.status}
+            />
         </>
     );
 }

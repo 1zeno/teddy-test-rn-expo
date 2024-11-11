@@ -8,6 +8,12 @@ type AppContext = {
     login: (name: string) => Promise<void>;
     showOverlay: boolean;
     setShowOverlay: React.Dispatch<React.SetStateAction<boolean>>;
+    message: {
+        text: string;
+        status: string;
+    };
+    onSuccess: (text: string) => void;
+    onError: (text: string) => void;
 }
 
 const AppContext = React.createContext<AppContext | null>(null);
@@ -28,6 +34,7 @@ export const AppContextProvider = ({
 }) => {
     const [userState, setUser] = React.useState<String | null>(null); 
     const [showOverlay, setShowOverlay] = React.useState<boolean>(false);
+    const [message, setMessage] = React.useState({text:"", status: ""});
 
     const autoLogin = async () => {
         const value = await AsyncStorage.getItem("user");
@@ -53,6 +60,23 @@ export const AppContextProvider = ({
         setUser(null);
     }
 
+    const onCloseMessage = () => {
+        setMessage({text:"", status: ""});
+    }
+    const onSuccess = (text: string) => {
+        setMessage({text, status: "success"});
+        setTimeout(() => {
+            onCloseMessage();
+        },3000);
+    }
+
+    const onError = (text: string) => {
+        setMessage({text, status: "error"});
+        setTimeout(() => {
+            onCloseMessage();
+        },3000);
+    }
+
     return (
         <AppContext.Provider
             value={{
@@ -62,6 +86,9 @@ export const AppContextProvider = ({
                 login,
                 showOverlay,
                 setShowOverlay,
+                message,
+                onSuccess,
+                onError,
             }}>
             {children}
         </AppContext.Provider>

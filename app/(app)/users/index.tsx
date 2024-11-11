@@ -20,6 +20,7 @@ import useInput from "@/hooks/useInput";
 import "react-native-gesture-handler";
 import { removeMaskPrice } from "@/utils";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useAppContext } from "@/context/AppContext";
 
 interface IGetUsers {
 	clients: IUser[];
@@ -43,6 +44,8 @@ export default function UsersScreen() {
 	const salary = useInput("price");
 	const companyValuation = useInput("price");
 	const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+
+	const appContext = useAppContext();
 
 	const handlePage = useCallback((page: number) => {
 		onFilter(page, limit)
@@ -123,6 +126,7 @@ export default function UsersScreen() {
 			await fetch(url, options);
 			await onFilter(1, limit);
 			closeBottomSheet();
+			appContext.onSuccess("Usuário criado com sucesso!");
 		} catch (error) {
 			console.error(error);
 		} finally {
@@ -136,7 +140,9 @@ export default function UsersScreen() {
 			const { url, options } = DELETE_USER(id);
 			await fetch(url, options);
 			await onFilter(1, limit);
+			appContext.onSuccess("Exclusão realizada com sucesso!");
 		} catch (error) {
+			appContext.onError("Erro ao deletar usuário.");
 			console.error(error);
 		} finally {
 			setLoadingDelete(false);
@@ -157,12 +163,18 @@ export default function UsersScreen() {
 				await AsyncStorage.setItem("selected-users", jsonValue);
 				const usersId = newValue.map((value) => value.id);
 				setSelectedIds(usersId);
+				appContext.onSuccess("Usuário selecionado com sucesso!");
 			} else {
 				const jsonValue = JSON.stringify([user]);
 				await AsyncStorage.setItem("selected-users", jsonValue);
 				setSelectedIds([user.id]);
 			}
 		} catch (error) {
+			if (error instanceof Error) {
+				appContext.onError(error.message);
+			} else {
+				appContext.onError("Erro ao selecionar usuário.");
+			}
 			console.error(error);
 		}
 	}
@@ -179,6 +191,7 @@ export default function UsersScreen() {
 				setSelectedIds(usersId);
 			}
 		} catch (error) {
+			appContext.onError("Ocorreu um erro ao remover usuário.");
 			console.error(error);
 		}
 	}
