@@ -1,3 +1,4 @@
+import { colors } from "@/utils";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 interface IProps {
@@ -119,7 +120,7 @@ const styles = StyleSheet.create({
     selectedItem: {
         paddingVertical: 10,
         paddingHorizontal: 15,
-        backgroundColor: "#EC6724",
+        backgroundColor: colors.orange,
         borderRadius: 4,
     },
     selectedItemText: {

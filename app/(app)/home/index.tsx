@@ -1,6 +1,7 @@
 import { IUser } from "@/api/users";
 import Button from "@/components/Button";
 import CardUserSelected from "@/components/CardUserSelected";
+import { colors } from "@/utils";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Link } from "expo-router";
 import React, { useCallback, useEffect, useState } from "react";
@@ -82,7 +83,7 @@ export default function HomeScreen() {
 				</>
 			)}
 			{loading && (
-				<ActivityIndicator style={{ flex: 1 }} size="large" color="#EC6724" />
+				<ActivityIndicator style={{ flex: 1 }} size="large" color={colors.orange} />
 			)}
 			{!loading && data.length === 0 && (
 				<>
@@ -118,7 +119,7 @@ const styles = StyleSheet.create({
 	},
 	button: {
 		width: "100%",
-		borderColor: "#EC6724",
+		borderColor: colors.orange,
 		borderWidth: 2,
 		alignItems: "center",
 		paddingVertical: 10,
@@ -127,6 +128,6 @@ const styles = StyleSheet.create({
 	buttonText: {
 		fontSize: 14,
 		fontWeight: "bold",
-		color: "#EC6724",
+		color: colors.orange,
 	},
 });

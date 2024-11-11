@@ -1,3 +1,7 @@
+export const colors = {
+    orange: "#EC6724",
+}
+
 export const maskPrice = (price: string | number) => {
     if(typeof price !== "string"){
         price = price.toString();

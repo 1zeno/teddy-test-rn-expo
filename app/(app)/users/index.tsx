@@ -12,7 +12,7 @@ import { BottomSheetModal, BottomSheetView } from "@gorhom/bottom-sheet";
 import { CREATE_USER, DELETE_USER, GET_USERS, IUser } from "@/api/users";
 import useInput from "@/hooks/useInput";
 import "react-native-gesture-handler";
-import { removeMaskPrice } from "@/utils";
+import { colors, removeMaskPrice } from "@/utils";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useAppContext } from "@/context/AppContext";
 import Button from "@/components/Button";
@@ -211,7 +211,7 @@ export default function UsersScreen() {
 
 	if (loadingDelete) {
 		return (
-			<ActivityIndicator style={{ flex: 1 }} size="large" color="#EC6724" />
+			<ActivityIndicator style={{ flex: 1 }} size="large" color={colors.orange} />
 		)
 	}
 
@@ -255,7 +255,7 @@ export default function UsersScreen() {
 				/>
 			)}
 			{listLoading && (
-				<ActivityIndicator style={{ flex: 1 }} size="large" color="#EC6724" />
+				<ActivityIndicator style={{ flex: 1 }} size="large" color={colors.orange} />
 			)}
 			{!listLoading && data.length === 0 && (
 				<View style={styles.emptyContainer}>
@@ -334,7 +334,7 @@ export default function UsersScreen() {
 							disabled={disable}
 						/>
 						{disable && (
-							<ActivityIndicator style={{ flex: 1 }} size="large" color="#EC6724" />
+							<ActivityIndicator style={{ flex: 1 }} size="large" color={colors.orange} />
 						)}
 					</BottomSheetView>
 				</KeyboardAvoidingView>

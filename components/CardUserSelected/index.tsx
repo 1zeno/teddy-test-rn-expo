@@ -3,7 +3,7 @@ import Entypo from "@expo/vector-icons/Entypo";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { IUser } from "@/api/users";
-import { maskPrice } from "@/utils";
+import { colors, maskPrice } from "@/utils";
 import { Link } from "expo-router";
 import { useCallback } from "react";
 
@@ -28,9 +28,9 @@ export default function CardUserSelected({
 			<View style={styles.iconContainer}>
 				<TouchableOpacity onPress={() => handleSelectedUsers()}>
 					<Entypo
-						name={"minus" }
+						name={"minus"}
 						size={20}
-						color="#EC6724"
+						color={colors.orange}
 					/>
 				</TouchableOpacity>
 			</View>

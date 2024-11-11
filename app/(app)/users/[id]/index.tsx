@@ -6,7 +6,7 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 import { EDIT_USER, GET_USER_BY_ID, IUser } from "@/api/users";
 import useInput from "@/hooks/useInput";
-import { maskPrice, removeMaskPrice } from "@/utils";
+import { colors, maskPrice, removeMaskPrice } from "@/utils";
 import Button from "@/components/Button";
 
 export default function UserScreen() {
@@ -59,7 +59,7 @@ export default function UserScreen() {
 
 	if(loading){
 		return(
-			<ActivityIndicator style={{ flex: 1 }} size="large" color="#EC6724" />
+			<ActivityIndicator style={{ flex: 1 }} size="large" color={colors.orange} />
 		)
 	}
 
@@ -110,7 +110,7 @@ export default function UserScreen() {
 					disabled={disable}
 				/>
 				{disable && (
-					<ActivityIndicator style={{ flex: 1 }} size="large" color="#EC6724" />
+					<ActivityIndicator style={{ flex: 1 }} size="large" color={colors.orange} />
 				)}
 			</View>
 		</KeyboardAvoidingView>

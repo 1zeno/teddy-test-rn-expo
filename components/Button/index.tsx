@@ -1,3 +1,4 @@
+import { colors } from "@/utils";
 import { StyleSheet, Text, TouchableOpacity } from "react-native";
 
 interface IProps {
@@ -48,7 +49,7 @@ const styles = StyleSheet.create({
 	disabledOutlined: {
         opacity: 0.5,
 		width: "100%",
-		borderColor: "#EC6724",
+		borderColor: colors.orange,
 		borderWidth: 2,
 		alignItems: "center",
 		paddingVertical: 10,
@@ -57,11 +58,11 @@ const styles = StyleSheet.create({
 	disabledOutlinedText: {
 		fontSize: 14,
 		fontWeight: "bold",
-		color: "#EC6724",
+		color: colors.orange,
 	},
     outlined: {
 		width: "100%",
-		borderColor: "#EC6724",
+		borderColor: colors.orange,
 		borderWidth: 2,
 		alignItems: "center",
 		paddingVertical: 10,
@@ -70,7 +71,7 @@ const styles = StyleSheet.create({
 	outlinedText: {
 		fontSize: 14,
 		fontWeight: "bold",
-		color: "#EC6724",
+		color: colors.orange,
 	},
     disabledFilled: {
 		width: "100%",
