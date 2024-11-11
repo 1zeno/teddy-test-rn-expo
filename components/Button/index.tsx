@@ -8,7 +8,7 @@ interface IProps {
     disabled?: boolean;
 }
 
-export default function Button({ text, onPress, variant="filled", disabled }: IProps) {
+export default function Button({ text, onPress, variant, disabled }: IProps) {
 
     if(variant === "outlined"){
         return (
