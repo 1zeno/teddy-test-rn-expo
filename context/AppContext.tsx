@@ -1,9 +1,11 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import React from "react";
 
 type AppContext = {
     user: String | null;
-    setUser: React.Dispatch<React.SetStateAction<String | null>>;
-    logout: () => void;
+    logout: () => Promise<void>;
+    autoLogin: () => Promise<void>;
+    login: (name: string) => Promise<void>;
     showOverlay: boolean;
     setShowOverlay: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -27,7 +29,27 @@ export const AppContextProvider = ({
     const [userState, setUser] = React.useState<String | null>(null); 
     const [showOverlay, setShowOverlay] = React.useState<boolean>(false);
 
-    const logout = () => {
+    const autoLogin = async () => {
+        const value = await AsyncStorage.getItem("user");
+        if (value === null) {
+            throw new Error("É necessário fazer o login.");
+        }
+        if (value !== null) {
+            setUser(value);
+        }
+    }
+
+    const login = async (name: string) => {
+        const value = await AsyncStorage.getItem("user");
+        if (value !== null) {
+            throw new Error("Usuário já está cadastrado.");
+        }
+        await AsyncStorage.setItem("user", name);
+        setUser(value);
+    }
+
+    const logout = async () => {
+        await AsyncStorage.removeItem("user");
         setUser(null);
     }
 
@@ -35,8 +57,9 @@ export const AppContextProvider = ({
         <AppContext.Provider
             value={{
                 user: userState,
-                setUser,
                 logout,
+                autoLogin,
+                login,
                 showOverlay,
                 setShowOverlay,
             }}>
