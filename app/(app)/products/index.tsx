@@ -3,9 +3,7 @@ import { StyleSheet, Text, View } from "react-native";
 export default function HomeScreen() {
 	return (
 		<View style={styles.container}>
-			<View style={styles.emptyContainer}>
-					<Text style={styles.emptyText}>Não há produto cadastrado.</Text>
-				</View>
+			<Text style={styles.emptyText}>Não há produto cadastrado.</Text>
 		</View>
 	);
 }
@@ -15,15 +13,10 @@ const styles = StyleSheet.create({
 		flex: 1,
 		width: "100%",
 		alignItems: "center",
-		justifyContent: "center",
+		padding: 20,
 	},
 	emptyText: {
 		fontSize: 18,
 		fontWeight: "bold",
-	},
-	emptyContainer: {
-		flex: 1,
-		alignItems: "center",
-		justifyContent: "center",
 	},
 });

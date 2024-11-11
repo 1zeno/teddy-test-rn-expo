@@ -19,6 +19,7 @@ import { CREATE_USER, DELETE_USER, GET_USERS, IUser } from "@/api/users";
 import useInput from "@/hooks/useInput";
 import "react-native-gesture-handler";
 import { removeMaskPrice } from "@/utils";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 interface IGetUsers {
 	clients: IUser[];
@@ -36,19 +37,22 @@ export default function UsersScreen() {
 	const [quantity, setQuantity] = useState(0);
 	const [listLoading, setListLoading] = useState(true);
 	const [loadingDelete, setLoadingDelete] = useState(false);
+	const [selectedIds, setSelectedIds] = useState<number[]>([])
+
 	const name = useInput();
 	const salary = useInput("price");
 	const companyValuation = useInput("price");
+	const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
 	const handlePage = useCallback((page: number) => {
 		onFilter(page, limit)
 	}, [limit])
-	const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
 	const handlePresentModalPress = useCallback(() => {
 		StatusBar.setHidden(true, "fade");
 		bottomSheetModalRef.current?.present();
 	}, []);
+
 	const closeBottomSheet = useCallback(() => {
 		bottomSheetModalRef.current?.close();
 	}, []);
@@ -106,8 +110,8 @@ export default function UsersScreen() {
 			},
 		])
 	};
-	
-	const createUser = useCallback(async ()=> {
+
+	const createUser = useCallback(async () => {
 		setDisable(true);
 		try {
 			const body: Omit<IUser, "id"> = {
@@ -124,8 +128,9 @@ export default function UsersScreen() {
 		} finally {
 			setDisable(false);
 		}
-	},[name.value, salary.value, companyValuation.value, limit])
-	const onDelete = useCallback(async (id: number)=> {
+	}, [name.value, salary.value, companyValuation.value, limit])
+
+	const onDelete = useCallback(async (id: number) => {
 		setLoadingDelete(true);
 		try {
 			const { url, options } = DELETE_USER(id);
@@ -136,14 +141,68 @@ export default function UsersScreen() {
 		} finally {
 			setLoadingDelete(false);
 		}
-	},[name.value, salary.value, companyValuation.value, limit])
+	}, [name.value, salary.value, companyValuation.value, limit])
+
+	const onSelectUser = async (user: IUser) => {
+		try {
+			const response = await AsyncStorage.getItem("selected-users");
+			if (response !== null) {
+				const selectedUsers: IUser[] = JSON.parse(response);
+				const isPreviousSelected = selectedUsers.filter((value) => value.id === user.id).length > 0;
+				if (isPreviousSelected) {
+					throw new Error("Usuário já foi selecionado anteriormente.");
+				}
+				const newValue = [...selectedUsers, user]
+				const jsonValue = JSON.stringify(newValue);
+				await AsyncStorage.setItem("selected-users", jsonValue);
+				const usersId = newValue.map((value) => value.id);
+				setSelectedIds(usersId);
+			} else {
+				const jsonValue = JSON.stringify([user]);
+				await AsyncStorage.setItem("selected-users", jsonValue);
+				setSelectedIds([user.id]);
+			}
+		} catch (error) {
+			console.error(error);
+		}
+	}
+
+	const onRemoveSelectedUser = async (id: number) => {
+		try {
+			const response = await AsyncStorage.getItem("selected-users");
+			if (response !== null) {
+				const selectedUsers: IUser[] = JSON.parse(response);
+				const users = selectedUsers.filter((value) => value.id !== id);
+				const jsonValue = JSON.stringify(users);
+				await AsyncStorage.setItem("selected-users", jsonValue);
+				const usersId = users.map((value) => value.id);
+				setSelectedIds(usersId);
+			}
+		} catch (error) {
+			console.error(error);
+		}
+	}
+
+	const getSelectedIds = useCallback(async () => {
+		try {
+			const response = await AsyncStorage.getItem("selected-users");
+			if (response !== null) {
+				const selectedUsers: IUser[] = JSON.parse(response);
+				const usersId = selectedUsers.map((value) => value.id);
+				setSelectedIds(usersId);
+			}
+		} catch (error) {
+			console.error(error);
+		}
+	}, [])
 
 	useEffect(() => {
 		getUsers();
+		getSelectedIds();
 	}, [])
 
-	if(loadingDelete){
-		return(
+	if (loadingDelete) {
+		return (
 			<ActivityIndicator style={{ flex: 1 }} size="large" color="#EC6724" />
 		)
 	}
@@ -155,18 +214,19 @@ export default function UsersScreen() {
 				<Text style={styles.text}> clientes encontrados:</Text>
 			</View>
 			<View style={styles.infoContainer}>
-				<Text style={styles.text}>Clientes por página:</Text>
-				<Picker
-					selectedValue={limit}
-					onValueChange={onLimitChange}
-					style={{ height: 50, width: 100 }}
-				>
-					<Picker.Item label="1" value="1" />
-					<Picker.Item label="5" value="5" />
-					<Picker.Item label="10" value="10" />
-					<Picker.Item label="15" value="15" />
-					<Picker.Item label="20" value="20" />
-				</Picker>
+				<Text style={styles.text}>Clientes por página: </Text>
+				<View style={styles.picker}>
+					<Picker
+						selectedValue={limit}
+						onValueChange={onLimitChange}
+					>
+						<Picker.Item label="1" value="1" />
+						<Picker.Item label="5" value="5" />
+						<Picker.Item label="10" value="10" />
+						<Picker.Item label="15" value="15" />
+						<Picker.Item label="20" value="20" />
+					</Picker>
+				</View>
 			</View>
 			{!listLoading && data.length > 0 ? (
 				<FlatList
@@ -179,6 +239,9 @@ export default function UsersScreen() {
 							key={item.id}
 							user={item}
 							onDelete={onDeleteAlert}
+							onSelectUser={onSelectUser}
+							selectedIds={selectedIds}
+							onRemoveUser={onRemoveSelectedUser}
 						/>
 					)}
 				/>
@@ -211,10 +274,10 @@ export default function UsersScreen() {
 				snapPoints={["100%"]}
 			>
 				<KeyboardAvoidingView
-				behavior={Platform.OS === "ios" ? "padding" : "height"}
-				style={{
-					flex: 1
-				}}
+					behavior={Platform.OS === "ios" ? "padding" : "height"}
+					style={{
+						flex: 1
+					}}
 				>
 					<BottomSheetView style={styles.contentContainer}>
 						<View style={styles.titleContent}>
@@ -278,6 +341,15 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 		padding: 20,
 		gap: 10,
+	},
+	picker: {
+		width: 100,
+		height: 30,
+		borderWidth: 1,
+		padding: 0,
+		justifyContent: "center",
+		borderColor: "#D9D9D9",
+		borderRadius: 4,
 	},
 	infoContainer: {
 		flexDirection: "row",

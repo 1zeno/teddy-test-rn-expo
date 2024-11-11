@@ -9,25 +9,16 @@ import { useCallback } from "react";
 
 interface IProps {
 	user: IUser;
-	selectedIds: number[];
-	onDelete: (name: string, id: number) => void;
-	onSelectUser: (user: IUser) => void;
 	onRemoveUser: (id: number) => void;
 }
 
-export default function CardUsers({
-	user, onDelete, onSelectUser,
-	selectedIds, onRemoveUser,
+export default function CardUserSelected({
+	user, onRemoveUser,
 }: IProps) {
 
-	const isSelected = selectedIds.includes(user.id);
 	const handleSelectedUsers = useCallback(() => {
-		if(isSelected){
-			onRemoveUser(user.id);
-			return;
-		}
-		onSelectUser(user)
-	}, [isSelected]);
+		onRemoveUser(user.id);
+	}, []);
 
 	return (
 		<View style={styles.container}>
@@ -37,18 +28,10 @@ export default function CardUsers({
 			<View style={styles.iconContainer}>
 				<TouchableOpacity onPress={() => handleSelectedUsers()}>
 					<Entypo
-						name={isSelected ? "minus" : "plus"}
+						name={"minus" }
 						size={20}
+						color="#EC6724"
 					/>
-				</TouchableOpacity>
-				<Link href={{
-					pathname: "/users/[id]/",
-					params: { id: user.id }
-				}}>
-					<MaterialCommunityIcons name="pencil-outline" size={20} />
-				</Link>
-				<TouchableOpacity onPress={() => onDelete(user.name, user.id)}>
-					<AntDesign name="delete" size={20} color="red" />
 				</TouchableOpacity>
 			</View>
 		</View>
@@ -76,7 +59,7 @@ const styles = StyleSheet.create({
 	iconContainer: {
 		width: "100%",
 		flexDirection: "row",
-		justifyContent: "space-between",
+		justifyContent: "flex-end",
 		padding: 10,
 	},
 });
