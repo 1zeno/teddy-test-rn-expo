@@ -1,10 +1,7 @@
-import { Pressable, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Entypo from "@expo/vector-icons/Entypo";
-import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
-import AntDesign from "@expo/vector-icons/AntDesign";
 import { IUser } from "@/api/users";
 import { colors, maskPrice } from "@/utils";
-import { Link } from "expo-router";
 import { useCallback } from "react";
 
 interface IProps {

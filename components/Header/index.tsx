@@ -28,15 +28,15 @@ const styles = StyleSheet.create({
         height: 1,
         backgroundColor: '#ddd',
         ...Platform.select({
-          ios: {
-            shadowColor: '#000',
-            shadowOffset: { width: 0, height: 2 },
-            shadowOpacity: 0.1,
-            shadowRadius: 4,
-          },
-          android: {
-            elevation: 1,
-          },
+            ios: {
+                shadowColor: '#000',
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.1,
+                shadowRadius: 4,
+            },
+            android: {
+                elevation: 1,
+            },
         }),
-      },
+    },
 });
