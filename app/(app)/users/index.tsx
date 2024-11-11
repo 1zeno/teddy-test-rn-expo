@@ -21,6 +21,7 @@ import "react-native-gesture-handler";
 import { removeMaskPrice } from "@/utils";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useAppContext } from "@/context/AppContext";
+import Button from "@/components/Button";
 
 interface IGetUsers {
 	clients: IUser[];
@@ -266,9 +267,11 @@ export default function UsersScreen() {
 					<Text style={styles.emptyText}>Não há cliente cadastrado.</Text>
 				</View>
 			)}
-			<TouchableOpacity style={styles.button} onPress={handlePresentModalPress}>
-				<Text style={styles.buttonText}>Criar cliente</Text>
-			</TouchableOpacity>
+			<Button
+				onPress={handlePresentModalPress}
+				variant="outlined"
+				text="Criar cliente"
+			/>
 			<BottomSheetModal
 				ref={bottomSheetModalRef}
 				onDismiss={() => {
@@ -329,9 +332,12 @@ export default function UsersScreen() {
 								value={companyValuation.value}
 							/>
 						</View>
-						<TouchableOpacity style={disable ? styles.disabledButton : styles.createButton} onPress={createUser}>
-							<Text style={disable ? styles.disabledText : styles.createButtonText}>Criar cliente</Text>
-						</TouchableOpacity>
+						<Button
+							onPress={createUser}
+							variant="filled"
+							text="Criar cliente"
+							disabled={disable}
+						/>
 						{disable && (
 							<ActivityIndicator style={{ flex: 1 }} size="large" color="#EC6724" />
 						)}

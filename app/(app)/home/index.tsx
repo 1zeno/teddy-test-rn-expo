@@ -1,4 +1,5 @@
 import { IUser } from "@/api/users";
+import Button from "@/components/Button";
 import CardUserSelected from "@/components/CardUserSelected";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Link } from "expo-router";
@@ -73,9 +74,11 @@ export default function HomeScreen() {
 							/>
 						)}
 					/>
-					<TouchableOpacity style={styles.button} onPress={onClearSelectedUsers}>
-						<Text style={styles.buttonText}>Limpar clientes selecionados</Text>
-					</TouchableOpacity>
+					<Button
+						onPress={onClearSelectedUsers}
+						variant="outlined"
+						text="Limpar clientes selecionados"
+					/>
 				</>
 			)}
 			{loading && (

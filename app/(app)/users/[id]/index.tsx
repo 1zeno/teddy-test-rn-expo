@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { EDIT_USER, GET_USER_BY_ID, IUser } from "@/api/users";
 import useInput from "@/hooks/useInput";
 import { maskPrice, removeMaskPrice } from "@/utils";
+import Button from "@/components/Button";
 
 export default function UserScreen() {
 	const [loading, setLoading] = useState(true);
@@ -99,9 +100,12 @@ export default function UserScreen() {
 						value={companyValuation.value}
 					/>
 				</View>
-				<TouchableOpacity style={disable ? styles.disabledButton : styles.createButton} onPress={editUser}>
-					<Text style={disable ? styles.disabledText : styles.createButtonText}>Salvar</Text>
-				</TouchableOpacity>
+				<Button
+					variant="filled"
+					text="Salvar"
+					onPress={editUser}
+					disabled={disable}
+				/>
 				{disable && (
 					<ActivityIndicator style={{ flex: 1 }} size="large" color="#EC6724" />
 				)}

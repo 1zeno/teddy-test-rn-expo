@@ -2,6 +2,7 @@ import { StyleSheet, Text, TextInput, View, TouchableOpacity } from "react-nativ
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { useAppContext } from "@/context/AppContext";
+import Button from "@/components/Button";
 
 export default function LoginScreen() {
 
@@ -40,9 +41,11 @@ export default function LoginScreen() {
 				placeholderTextColor="#D9D9D9"
 				onChangeText={setName}
 			/>
-			<TouchableOpacity style={styles.button} onPress={onSubmit}>
-				<Text style={styles.buttonText}>Entrar</Text>
-			</TouchableOpacity>
+			<Button
+				onPress={onSubmit}
+				variant="filled"
+				text="Entrar"
+			/>
 		</View>
 	);
 }
