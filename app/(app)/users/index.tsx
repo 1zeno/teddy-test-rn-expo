@@ -104,6 +104,7 @@ export default function UsersScreen() {
 			const { url, options } = CREATE_USER(body);
 			await fetch(url, options);
 			await onFilter(1, limit);
+			setQuantity((value) => value + 1)
 			closeBottomSheet();
 			appContext.onSuccess("Usuário criado com sucesso!");
 		} catch (error) {
@@ -119,6 +120,7 @@ export default function UsersScreen() {
 			const { url, options } = DELETE_USER(id);
 			await fetch(url, options);
 			await onFilter(1, limit);
+			setQuantity((value) => value-1)
 			appContext.onSuccess("Exclusão realizada com sucesso!");
 		} catch (error) {
 			appContext.onError("Erro ao deletar usuário.");
@@ -158,7 +160,6 @@ export default function UsersScreen() {
 				await AsyncStorage.setItem("selected-users", jsonValue);
 				const usersId = newValue.map((value) => value.id);
 				setSelectedIds(usersId);
-				appContext.onSuccess("Usuário selecionado com sucesso!");
 			} else {
 				const jsonValue = JSON.stringify([user]);
 				await AsyncStorage.setItem("selected-users", jsonValue);
