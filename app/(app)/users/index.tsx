@@ -55,7 +55,7 @@ export default function UsersScreen() {
 		bottomSheetModalRef.current?.close();
 	}, []);
 
-	const getUsers = async () => {
+	const getUsers = useCallback(async () => {
 		setListLoading(true);
 		try {
 			const { url, options } = GET_USERS(1, 1);
@@ -70,9 +70,9 @@ export default function UsersScreen() {
 		} finally {
 			setListLoading(false);
 		}
-	}
+	}, []);
 
-	const onFilter = async (page: number, limit: number) => {
+	const onFilter = useCallback(async (page: number, limit: number) => {
 		setListLoading(true);
 		try {
 			const { url, options } = GET_USERS(page, limit);
@@ -86,28 +86,12 @@ export default function UsersScreen() {
 		} finally {
 			setListLoading(false);
 		}
-	}
+	}, []);
 
-	const onLimitChange = (itemValue: number, itemIndex: number) => {
+	const onLimitChange = useCallback((itemValue: number, itemIndex: number) => {
 		setLimit(itemValue);
 		onFilter(1, itemValue);
-	}
-
-	const onDeleteAlert = (name: string, id: number) => {
-		const title = "Excluir cliente:"
-		const message = `Tem certeza que deseja excluir o cliente ${name}?`;
-		Alert.alert(title, message, [
-			{
-				text: "Cancelar",
-				style: "cancel",
-			},
-			{
-				text: "Exluir cliente",
-				onPress: () => onDelete(id),
-				style: "destructive",
-			},
-		])
-	};
+	}, []);
 
 	const createUser = useCallback(async () => {
 		setDisable(true);
@@ -144,7 +128,23 @@ export default function UsersScreen() {
 		}
 	}, [name.value, salary.value, companyValuation.value, limit])
 
-	const onSelectUser = async (user: IUser) => {
+	const onDeleteAlert = useCallback((name: string, id: number) => {
+		const title = "Excluir cliente:"
+		const message = `Tem certeza que deseja excluir o cliente ${name}?`;
+		Alert.alert(title, message, [
+			{
+				text: "Cancelar",
+				style: "cancel",
+			},
+			{
+				text: "Exluir cliente",
+				onPress: () => onDelete(id),
+				style: "destructive",
+			},
+		])
+	}, [onDelete]);
+
+	const onSelectUser = useCallback(async (user: IUser) => {
 		try {
 			const response = await AsyncStorage.getItem("selected-users");
 			if (response !== null) {
@@ -172,9 +172,9 @@ export default function UsersScreen() {
 			}
 			console.error(error);
 		}
-	}
+	}, []);
 
-	const onRemoveSelectedUser = async (id: number) => {
+	const onRemoveSelectedUser = useCallback(async (id: number) => {
 		try {
 			const response = await AsyncStorage.getItem("selected-users");
 			if (response !== null) {
@@ -189,7 +189,7 @@ export default function UsersScreen() {
 			appContext.onError("Ocorreu um erro ao remover usuário.");
 			console.error(error);
 		}
-	}
+	}, []);
 
 	const getSelectedIds = useCallback(async () => {
 		try {
@@ -236,7 +236,7 @@ export default function UsersScreen() {
 					</Picker>
 				</View>
 			</View>
-			{!listLoading && data.length > 0 ? (
+			{!listLoading && data.length > 0 && (
 				<FlatList
 					style={{
 						gap: 20,
@@ -253,7 +253,8 @@ export default function UsersScreen() {
 						/>
 					)}
 				/>
-			) : (
+			)}
+			{listLoading && (
 				<ActivityIndicator style={{ flex: 1 }} size="large" color="#EC6724" />
 			)}
 			{!listLoading && data.length === 0 && (

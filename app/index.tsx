@@ -1,6 +1,6 @@
 import { StyleSheet, Text, TextInput, View } from "react-native";
 import { useRouter } from "expo-router";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useAppContext } from "@/context/AppContext";
 import Button from "@/components/Button";
 
@@ -10,23 +10,23 @@ export default function LoginScreen() {
 	const router = useRouter();
 	const appContext = useAppContext();
 
-	const onSubmit = async () => {
+	const onSubmit = useCallback(async () => {
 		try {
 			await appContext.login(name);
 			router.navigate("/home");
 		} catch (error) {
 			console.log(error);
 		}
-	}
+	}, [name])
 
-	const inititalFetch = async () => {
+	const inititalFetch = useCallback(async () => {
 		try {
 			await appContext.autoLogin();
 			router.navigate("/home");
 		} catch (error) {
 			console.log(error);
 		}
-	}
+	}, [])
 
 	useEffect(() => {
 		inititalFetch();

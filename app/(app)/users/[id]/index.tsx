@@ -1,4 +1,7 @@
-import { ActivityIndicator, Keyboard, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native";
+import {
+	ActivityIndicator, KeyboardAvoidingView, Platform,
+	StyleSheet, Text, TextInput, View,
+} from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 import { EDIT_USER, GET_USER_BY_ID, IUser } from "@/api/users";
@@ -63,7 +66,7 @@ export default function UserScreen() {
 	return (
 		<KeyboardAvoidingView
 			behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-			keyboardVerticalOffset={Platform.OS === 'ios' ? 100 : 0} // Ajuste conforme necessário	
+			keyboardVerticalOffset={Platform.OS === 'ios' ? 100 : 0}
 			style={styles.container}
 		>
 			<View style={styles.container}>

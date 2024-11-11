@@ -3,7 +3,7 @@ import Button from "@/components/Button";
 import CardUserSelected from "@/components/CardUserSelected";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Link } from "expo-router";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
 	ActivityIndicator, FlatList, Pressable,
 	StyleSheet, Text, View,
@@ -14,7 +14,7 @@ export default function HomeScreen() {
 	const [loading, setLoading] = useState(true);
 	const [data, setData] = useState<IUser[]>([]);
 
-	const getSelectedUsers = async () => {
+	const getSelectedUsers = useCallback(async () => {
 		try {
 			const response = await AsyncStorage.getItem("selected-users");
 			if (response !== null) {
@@ -26,9 +26,9 @@ export default function HomeScreen() {
 		} finally {
 			setLoading(false);
 		}
-	}
+	}, []);
 
-	const onRemoveSelectedUser = async (id: number) => {
+	const onRemoveSelectedUser = useCallback(async (id: number) => {
 		try {
 			const response = await AsyncStorage.getItem("selected-users");
 			if (response !== null) {
@@ -41,16 +41,16 @@ export default function HomeScreen() {
 		} catch (error) {
 			console.error(error);
 		}
-	}
+	}, []);
 
-	const onClearSelectedUsers = async () => {
+	const onClearSelectedUsers = useCallback(async () => {
 		try {
 			await AsyncStorage.removeItem("selected-users");
 			setData([]);
 		} catch (error) {
 			console.error(error);
 		}
-	}
+	}, []);
 
 	useEffect(() => {
 		getSelectedUsers();
